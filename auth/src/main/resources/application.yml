@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: auth-server
+  datasource:
+    url: jdbc:mysql://localhost:3306/spring_cloud?characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: password
+    hikari:
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 9
+  redis:
+    database: 1
+    host: 192.168.10.83
+    port: 6379
+#    password: 1qaz@WSX
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+    timeout: 100ms
+
+security:
+  oauth2:
+    client:
+      client-id: touhuwai
+      client-secret: 123456
+      user-authorization-uri: http://${USER_HOST:localhost}:${USER_PORT:18001}/oauth/authorize
+      access-token-uri: http://${USER_HOST:localhost}:${USER_PORT:18001}/oauth/token
+      authorized-grant-types: authorization_code,password,refresh_token,client_credentials
+    resource:
+      user-info-uri: http://${USER_HOST:localhost}:${USER_PORT:18001}/user/info
+      prefer-token-info: false
+      jwt:
+        key-uri: http://${USER_HOST:localhost}:${USER_PORT:18001}/oauth/token_key
+      id: ${spring.application.name}
+      service-id: ${spring.application.name}
+
+server:
+  port: 18001
+
+management:
+  endpoint:
+    health:
+      enabled: true
