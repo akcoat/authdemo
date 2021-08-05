@@ -58,21 +58,6 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
         clients.withClientDetails(clientDetails());
     }
 
-//    @Override
-//    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-//        clients.inMemory()
-//                .withClient("order-client")
-//                .secret(passwordEncoder.encode("order-secret-8888"))
-//                .authorizedGrantTypes("refresh_token", "authorization_code", "password")
-//                .accessTokenValiditySeconds(3600)
-//                .scopes("all")
-//                .and()
-//                .withClient("user-client")
-//                .secret(passwordEncoder.encode("user-secret-8888"))
-//                .authorizedGrantTypes("refresh_token", "authorization_code", "password")
-//                .accessTokenValiditySeconds(3600)
-//                .scopes("all");
-//    }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
