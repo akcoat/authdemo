@@ -8,6 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>auth</module>
+        <module>order</module>
     </modules>
     <name>authdemo</name>
     <description>Demo project for Spring Boot</description>

@@ -1,6 +1,6 @@
 package com.zhu.auth.config.oauth2;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.zhu.auth.config.JWTokenEnhancer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,10 +13,15 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableAuthorizationServer
@@ -32,19 +37,44 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
     private AuthenticationManager authenticationManager;
 
     @Resource
-    private TokenStore redisTokenStore;
+    private TokenStore jwtTokenStore;
+
+    @Resource
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
+
+
+//    @Resource
+//    private TokenStore redisTokenStore;
 
     @Resource
     private DataSource dataSource;
 
+
+    @Bean
+    public TokenEnhancer jwtTokenEnhancer(){
+        return new JWTokenEnhancer();
+    }
+
     @Override
     public void configure(final AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         /**
-         * redis token 方式
+         * jwt 增强模式
+         */
+        TokenEnhancerChain enhancerChain	= new TokenEnhancerChain();
+        List<TokenEnhancer> enhancerList	= new ArrayList<>();
+        enhancerList.add( jwtTokenEnhancer() );
+        enhancerList.add( jwtAccessTokenConverter );
+        enhancerChain.setTokenEnhancers( enhancerList );
+
+
+        /**
+         * jwt token 方式
          */
         endpoints.authenticationManager(authenticationManager)
                 .userDetailsService(kiteUserDetailsService)
-                .tokenStore(redisTokenStore);
+                .tokenStore(jwtTokenStore)
+        .accessTokenConverter(jwtAccessTokenConverter)
+        .tokenEnhancer(enhancerChain);
 
     }
 
