@@ -21,6 +21,10 @@ spring:
         max-idle: 8
         min-idle: 0
     timeout: 100ms
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.10.83:8848
 
 security:
   oauth2:

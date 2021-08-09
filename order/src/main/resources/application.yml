@@ -1,6 +1,10 @@
 spring:
   application:
     name: client-user
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.10.83:8848
   redis:
     database: 2
     host: 192.168.10.83
